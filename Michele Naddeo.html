@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Michele Naddeo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: apertura a tutto schermo con una rete viva dietro al nome; sotto, sezioni numerate
+   con etichetta a sinistra. Un solo mondo visivo scuro (antracite + rosso). */
+:root{
+  color-scheme: dark;
+  --bg:#12151A;
+  --panel:#1A1E25;
+  --line:#2A303A;
+  --text:#E8EAED;
+  --muted:#9AA3AF;
+  --accent:#E03A46;
+  --accent-soft:rgba(224,58,70,.16);
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.6;overflow-x:hidden}
+a{color:var(--text);text-decoration-color:var(--accent);text-underline-offset:4px}
+a:hover{color:#fff}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* barra di avanzamento */
+#progress{position:fixed;left:0;top:0;height:3px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;z-index:20}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:10;background:rgba(18,21,26,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 24px;padding-top:12px;padding-bottom:12px}
+.brand{font-family:var(--mono);font-size:14px;letter-spacing:.06em;text-decoration:none}
+.brand b{color:var(--accent);font-weight:500}
+.nav nav{display:flex;flex-wrap:wrap;gap:2px 20px}
+.nav nav a{position:relative;font-family:var(--mono);font-size:13px;color:var(--muted);text-decoration:none;padding:6px 0;transition:color .2s}
+.nav nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.nav nav a:hover,.nav nav a.on{color:var(--text)}
+.nav nav a.on::after,.nav nav a:hover::after{transform:scaleX(1)}
+
+.langbtn{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--text);background:transparent;border:1px solid var(--accent);padding:6px 12px;cursor:pointer;transition:background .2s,color .2s}
+.langbtn:hover{background:var(--accent);color:#fff}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+#net{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(18,21,26,.25),rgba(18,21,26,.85) 75%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1;padding-top:96px;padding-bottom:72px}
+.kicker{font-family:var(--mono);font-size:14px;color:var(--muted);letter-spacing:.08em;margin:0 0 20px;display:flex;align-items:center;gap:10px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(224,58,70,.7)}70%{box-shadow:0 0 0 12px rgba(224,58,70,0)}100%{box-shadow:0 0 0 0 rgba(224,58,70,0)}}
+h1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(68px,14.5vw,196px);line-height:.84;letter-spacing:-.01em;margin:0}
+h1 span{display:block}
+h1 .out{color:transparent;-webkit-text-stroke:2px var(--text);position:relative}
+h1 .out::after{content:attr(data-text);position:absolute;left:0;top:0;color:var(--accent);-webkit-text-stroke:0;clip-path:inset(0 100% 0 0);animation:wipe 1.1s .9s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes wipe{to{clip-path:inset(0 0 0 0)}}
+.rule{height:3px;background:var(--accent);margin:28px 0;transform-origin:left;animation:draw 1s .3s cubic-bezier(.2,.7,.2,1) both}
+@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.typed{font-family:var(--mono);font-size:clamp(16px,2vw,21px);min-height:1.6em;margin:0 0 28px}
+.typed .pre{color:var(--accent)}
+.caret{display:inline-block;width:.6em;height:1.1em;background:var(--accent);vertical-align:text-bottom;margin-left:3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.lead{font-size:clamp(18px,2.1vw,22px);line-height:1.45;margin:0;max-width:36em;text-wrap:balance}
+.stats{display:flex;flex-wrap:wrap;gap:16px 56px;margin:0;padding:0;list-style:none}
+.stats b{display:block;font-family:var(--display);font-weight:900;font-size:clamp(48px,7vw,84px);line-height:.9;font-variant-numeric:tabular-nums}
+.stats b i{font-style:normal;color:var(--accent)}
+.stats span{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.scrollcue{position:absolute;right:24px;bottom:24px;z-index:1;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;writing-mode:vertical-rl;display:flex;align-items:center;gap:10px}
+.scrollcue::after{content:"";width:1px;height:48px;background:linear-gradient(var(--accent),transparent);animation:drop 1.8s infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* nastro */
+.marquee{overflow:hidden;border-bottom:1px solid var(--line);background:var(--panel);padding:14px 0}
+.track{display:flex;width:max-content;gap:0;animation:slide 32s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track span{font-family:var(--display);font-weight:700;font-size:28px;text-transform:uppercase;letter-spacing:.04em;padding:0 22px;white-space:nowrap}
+.track span:nth-child(even){color:var(--accent)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* sezioni */
+section{padding:80px 0;border-top:1px solid var(--line);position:relative}
+section:first-of-type{border-top:0}
+.sec{display:grid;grid-template-columns:200px minmax(0,1fr);gap:32px}
+.sec-label{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;position:sticky;top:76px;align-self:start}
+.sec-label b{display:block;font-family:var(--display);font-weight:900;font-size:72px;line-height:.9;color:transparent;-webkit-text-stroke:1.5px var(--accent);margin-bottom:8px}
+h2{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:clamp(36px,5.4vw,60px);line-height:1;margin:0 0 28px;text-wrap:balance}
+p{margin:0 0 16px;max-width:65ch}
+.muted{color:var(--muted)}
+.hl{background:linear-gradient(var(--accent-soft),var(--accent-soft)) no-repeat 0 85%/0% 45%;transition:background-size .9s .3s cubic-bezier(.2,.7,.2,1)}
+.in .hl{background-size:100% 45%}
+
+/* comparsa allo scorrimento: parte da uno stato già leggibile */
+.js .rv{opacity:.18;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+
+/* linea del tempo */
+.timeline{position:relative;padding-left:36px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.fill{position:absolute;left:7px;top:6px;width:2px;height:calc(100% - 12px);background:var(--accent);transform:scaleY(var(--p,1));transform-origin:top;box-shadow:0 0 12px var(--accent)}
+.job{position:relative;display:grid;gap:10px;padding:0 0 40px}
+.job:last-child{padding-bottom:0}
+.job::before{content:"";position:absolute;left:-36px;top:7px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--accent);transition:background .4s .2s,box-shadow .4s .2s}
+.job.in::before{background:var(--accent);box-shadow:0 0 0 6px var(--accent-soft)}
+.job-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 24px;align-items:baseline}
+h3{font-size:22px;font-weight:600;margin:0}
+.when{font-family:var(--mono);font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums}
+.where{color:var(--muted);margin:0}
+.job ul{margin:6px 0 0;padding-left:20px;display:grid;gap:6px;max-width:65ch}
+.job li::marker{color:var(--accent)}
+.sub{margin-top:64px}
+
+/* certificazioni */
+.certs{display:grid;gap:0;border:1px solid var(--line);background:var(--panel)}
+.cert{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;transition:background .25s}
+.cert:last-child{border-bottom:0}
+.cert::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transition:transform .3s}
+.cert:hover{background:#20252E}
+.cert:hover::before,.cert.top::before{transform:scaleY(1)}
+.cert .code{font-family:var(--mono);font-size:13px;color:var(--accent);border:1px solid var(--line);padding:4px 0;text-align:center}
+.cert .name{font-weight:500}
+.cert.top .name{font-weight:600}
+.cert .name small{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400}
+.cert .date{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* schede con luce che segue il puntatore */
+.glow{position:relative;border:1px solid var(--line);background:var(--panel);padding:24px;transition:transform .2s ease-out,border-color .3s;transform-style:preserve-3d;will-change:transform}
+.glow::before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(224,58,70,.22),transparent 65%);opacity:0;transition:opacity .3s;pointer-events:none}
+.glow:hover{border-color:rgba(224,58,70,.55)}
+.glow:hover::before{opacity:1}
+.skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.skill h3{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.chips li{font-family:var(--mono);font-size:13px;border:1px solid var(--line);padding:5px 10px;transition:border-color .2s,color .2s,transform .2s}
+.chips li:hover{border-color:var(--accent);color:#fff;transform:translateY(-2px)}
+
+.projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.project{display:grid;gap:12px;align-content:start}
+.project p{margin:0}
+.project .n{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+.plink{font-family:var(--mono);font-size:14px;position:relative;z-index:1}
+.project.empty{background:transparent;border-style:dashed;color:var(--muted)}
+.project.empty h3{color:var(--muted)}
+
+/* contatti */
+#contatti{overflow:hidden}
+.big{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(56px,11vw,150px);line-height:.86;margin:0 0 32px}
+.big em{font-style:normal;color:transparent;-webkit-text-stroke:2px var(--accent)}
+.cta{position:relative;display:inline-block;font-family:var(--mono);font-size:16px;text-decoration:none;background:var(--accent);color:#fff;padding:16px 26px;overflow:hidden;transition:transform .2s}
+.cta::before{content:"";position:absolute;inset:0;background:#fff;transform:translateX(-101%);transition:transform .35s cubic-bezier(.7,0,.2,1)}
+.cta span{position:relative;transition:color .35s}
+.cta:hover{transform:translateY(-2px);color:#fff}
+.cta:hover::before{transform:none}
+.cta:hover span{color:#12151A}
+.ctas{display:flex;flex-wrap:wrap;gap:16px}
+.cta.alt{background:transparent;border:1px solid var(--text)}
+#numeri{padding:56px 0}
+.small{font-family:var(--mono);font-size:13px;color:var(--muted);overflow-wrap:anywhere;margin-top:16px}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+@media (max-width:760px){
+  .hero .wrap{padding-top:56px;padding-bottom:56px}
+  .sec,.skills,.projects{grid-template-columns:minmax(0,1fr)}
+  .sec{gap:16px}
+  .sec-label{position:static}
+  .sec-label b{font-size:48px}
+  section{padding:56px 0}
+  h1 .out,.big em{-webkit-text-stroke-width:1.5px}
+  .cert{grid-template-columns:60px minmax(0,1fr)}
+  .cert .date{grid-column:2}
+  .scrollcue{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  h1 .out::after{clip-path:none}
+  .js .rv{opacity:1;transform:none}
+  .hl{background-size:100% 45%}
+}
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">michele<b>.</b>naddeo</a>
+    <nav aria-label="Sezioni">
+      <a href="#chi-sono">chi sono</a>
+      <a href="#esperienza">esperienza</a>
+      <a href="#certificazioni">certificazioni</a>
+      <a href="#competenze">competenze</a>
+      <a href="#progetti">progetti</a>
+      <a href="#contatti">contatti</a>
+    </nav>
+    <button id="lang" type="button" class="langbtn" aria-label="Switch to English">EN</button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero" id="hero">
+    <canvas id="net" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <p class="kicker"><i class="dot" aria-hidden="true"></i>SYSTEM &amp; NETWORK SECURITY</p>
+      <h1 aria-label="Michele Naddeo"><span class="scr" data-text="Michele">Michele</span><span class="out scr" data-text="Naddeo">Naddeo</span></h1>
+      <div class="rule" aria-hidden="true"></div>
+      <p class="typed"><span class="pre">&gt; </span><span id="typed">Sophos Certified Architect</span><i class="caret" aria-hidden="true"></i></p>
+      <p class="lead">Ingegnere informatico specializzato in infrastrutture IT e network security. Progettazione e gestione di soluzioni di firewalling, data protection e virtualizzazione in contesti enterprise. Laurea Magistrale in Cybersecurity in corso presso Sapienza Università di Roma.</p>
+    </div>
+    <div class="scrollcue" aria-hidden="true"><span class="sc-t">SCORRI</span></div>
+  </div>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span>Sophos Firewall</span><span>Veeam</span><span>VMware vSphere</span><span>Hyper-V</span><span>VPN</span><span>Disaster Recovery</span><span>HPE Morpheus</span><span>QNAP</span><span>C# .NET</span><span>SQL Server</span>
+      <span>Sophos Firewall</span><span>Veeam</span><span>VMware vSphere</span><span>Hyper-V</span><span>VPN</span><span>Disaster Recovery</span><span>HPE Morpheus</span><span>QNAP</span><span>C# .NET</span><span>SQL Server</span>
+    </div>
+  </div>
+
+  <section id="chi-sono">
+    <div class="wrap sec">
+      <div class="sec-label"><b>01</b>Chi sono</div>
+      <div>
+        <h2 class="rv">Dallo sviluppo ai sistemi, fino alla sicurezza</h2>
+        <p class="rv">Ingegnere informatico, laureato presso l'Università degli Studi di Salerno e attualmente iscritto alla <span class="hl">Laurea Magistrale in Cybersecurity presso Sapienza Università di Roma</span>.</p>
+        <p class="rv">Come Junior System Engineer in una società di consulenza IT ho operato su progetti di <span class="hl">network security, firewalling e VPN</span>, data protection e disaster recovery, e su infrastrutture virtualizzate, incluse migrazioni tra hypervisor.</p>
+        <p class="rv">In precedenza ho maturato esperienza nello sviluppo software, progettando e realizzando un'applicazione web enterprise su architettura MVC, oggetto della mia tesi di laurea.</p>
+        <p class="rv">Il mio ambito di specializzazione è la <span class="hl">sicurezza delle infrastrutture</span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="esperienza">
+    <div class="wrap sec">
+      <div class="sec-label"><b>02</b>Esperienza</div>
+      <div>
+        <h2 class="rv">Esperienza</h2>
+        <div class="timeline tl">
+          <div class="fill" aria-hidden="true"></div>
+          <article class="job rv">
+            <div class="job-head"><h3>Junior System Engineer</h3><span class="when">apr 2026 → ott 2026</span></div>
+            <p class="where">Garofalo &amp; Partners S.r.l. · Stage · Salerno</p>
+            <ul>
+              <li>Progettazione, configurazione e gestione di firewall Sophos: regole di accesso, policy di sicurezza e VPN</li>
+              <li>Definizione e gestione di strategie di backup e disaster recovery con Veeam Backup &amp; Replication e storage QNAP</li>
+              <li>Amministrazione di ambienti VMware vSphere e migrazioni verso Microsoft Hyper-V per l'ottimizzazione dei costi di licenza</li>
+              <li>Attività di cloud management su HPE Morpheus</li>
+              <li>Analisi dei requisiti dei clienti e supporto tecnico sulle infrastrutture gestite</li>
+            </ul>
+          </article>
+          <article class="job rv">
+            <div class="job-head"><h3>Software Developer</h3><span class="when">nov 2025 → gen 2026</span></div>
+            <p class="where">Rinaldi Group S.p.A. SB · Stage · Giffoni Valle Piana</p>
+            <ul>
+              <li>Progettazione e sviluppo di un'applicazione web enterprise per la gestione degli ordini, dall'analisi dei requisiti alla documentazione tecnica</li>
+              <li>Architettura MVC con backend in C# (.NET) e frontend in TypeScript</li>
+              <li>Implementazione di ruoli, permessi e controlli di accesso ai dati, con separazione tra logica applicativa e livelli di autorizzazione</li>
+              <li>Integrazione con SQL Server e progettazione di viste per l'ottimizzazione delle query</li>
+            </ul>
+          </article>
+        </div>
+
+        <h2 class="rv sub">Formazione</h2>
+        <div class="timeline tl">
+          <div class="fill" aria-hidden="true"></div>
+          <article class="job rv">
+            <div class="job-head"><h3>Laurea Magistrale in Cybersecurity</h3><span class="when">set 2026 → in corso</span></div>
+            <p class="where">Sapienza Università di Roma</p>
+          </article>
+          <article class="job rv">
+            <div class="job-head"><h3>Laurea triennale in Ingegneria Informatica</h3><span class="when">set 2022 → feb 2026</span></div>
+            <p class="where">Università degli Studi di Salerno</p>
+            <p class="muted">Tesi: progettazione e sviluppo di un'applicazione web enterprise per la gestione degli ordini, realizzata durante il tirocinio presso Rinaldi Group.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="certificazioni">
+    <div class="wrap sec">
+      <div class="sec-label"><b>03</b>Certificazioni</div>
+      <div>
+        <h2 class="rv">Nove certificazioni tra Sophos e Veeam</h2>
+        <div class="certs">
+          <div class="cert top rv" style="--d:.00s"><span class="code">AT80</span><span class="name">Sophos Firewall v22.0 Certified Architect<small>Sophos</small></span><span class="date">mag 2026</span></div>
+          <div class="cert top rv" style="--d:.05s"><span class="code">AT15</span><span class="name">Sophos Endpoint Certified Architect v6.0<small>Sophos</small></span><span class="date">mag 2026</span></div>
+          <div class="cert top rv" style="--d:.10s"><span class="code">VMCE</span><span class="name">Veeam Certified Engineer<small>Veeam Software</small></span><span class="date">giu 2026</span></div>
+          <div class="cert rv" style="--d:.15s"><span class="code">ET12</span><span class="name">Sophos Detection and Response Certified Engineer v5.5<small>Sophos</small></span><span class="date">mag 2026</span></div>
+          <div class="cert rv" style="--d:.20s"><span class="code">ET86</span><span class="name">Sophos Switch v1.0<small>Sophos</small></span><span class="date">mag 2026</span></div>
+          <div class="cert rv" style="--d:.25s"><span class="code">S80</span><span class="name">Sophos Firewall v22.0 Certified Technician<small>Sophos</small></span><span class="date">2026</span></div>
+          <div class="cert rv" style="--d:.30s"><span class="code">S15</span><span class="name">Sophos Endpoint Certified Technician v6.0<small>Sophos</small></span><span class="date">2026</span></div>
+          <div class="cert rv" style="--d:.35s"><span class="code">VMTSP</span><span class="name">Veeam Technical Sales Professional<small>SaaS Protection · Cybersecurity &amp; DR · Public Cloud</small></span><span class="date">giu 2026</span></div>
+          <div class="cert rv" style="--d:.40s"><span class="code">VMSP</span><span class="name">Veeam Sales Professional<small>Veeam Software</small></span><span class="date">mag 2026</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="competenze">
+    <div class="wrap sec">
+      <div class="sec-label"><b>04</b>Competenze</div>
+      <div>
+        <h2 class="rv">Competenze</h2>
+        <div class="skills">
+          <div class="skill glow rv" style="--d:.00s"><h3>Network security</h3><ul class="chips"><li>Sophos Firewall</li><li>VPN</li><li>Policy di sicurezza</li><li>Reti cablate e wireless</li></ul></div>
+          <div class="skill glow rv" style="--d:.08s"><h3>Backup &amp; disaster recovery</h3><ul class="chips"><li>Veeam Backup &amp; Replication</li><li>QNAP</li><li>Disaster recovery</li></ul></div>
+          <div class="skill glow rv" style="--d:.16s"><h3>Virtualizzazione e cloud</h3><ul class="chips"><li>VMware vSphere</li><li>Microsoft Hyper-V</li><li>Migrazioni tra hypervisor</li><li>HPE Morpheus</li></ul></div>
+          <div class="skill glow rv" style="--d:.24s"><h3>Sviluppo</h3><ul class="chips"><li>C# (.NET)</li><li>TypeScript</li><li>SQL Server</li><li>MVC</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="progetti">
+    <div class="wrap sec">
+      <div class="sec-label"><b>05</b>Progetti</div>
+      <div>
+        <h2 class="rv">Progetti e lavori</h2>
+        <div class="projects">
+          <article class="project glow rv">
+            <span class="n">PROGETTO 01</span>
+            <h3>Gestione ordini enterprise</h3>
+            <p>Applicazione web enterprise per la gestione degli ordini aziendali, realizzata presso Rinaldi Group e oggetto della tesi di laurea. Gestione di ruoli e permessi e controllo degli accessi ai dati.</p>
+            <ul class="chips"><li>C# / .NET</li><li>TypeScript</li><li>SQL Server</li><li>MVC</li></ul>
+          </article>
+          <article class="project glow rv" style="--d:.1s">
+            <span class="n">PROGETTO 02</span>
+            <h3>Statistica applicata alla sicurezza</h3>
+            <p>Raccolta di elaborati interattivi di probabilità e statistica su temi di sicurezza: crittografia su curve ellittiche con analisi statistica delle chiavi, legge dei grandi numeri e teorema del limite centrale applicati a punteggi di attacco aggregati. Pagine HTML autonome con simulazioni e grafici SVG, senza librerie esterne.</p>
+            <ul class="chips"><li>JavaScript</li><li>SVG</li><li>Probabilità</li><li>Crittografia</li></ul>
+            <a class="plink" href="https://github.com/michelenaddeo/StatisticsHW">Vedi su GitHub →</a>
+          </article>
+          <article class="project glow empty rv" style="--d:.2s">
+            <span class="n">PROGETTO 03</span>
+            <h3>In aggiornamento</h3>
+            <p>Sezione in aggiornamento con progetti e laboratori del percorso magistrale in Cybersecurity.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="numeri">
+    <div class="wrap">
+      <ul class="stats rv">
+        <li><b><i class="count" data-to="9">9</i></b><span>certificazioni</span></li>
+        <li><b><i class="count" data-to="2">2</i></b><span>Certified Architect</span></li>
+        <li><b><i class="count" data-to="10">10</i></b><span>mesi in azienda</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contatti">
+    <div class="wrap">
+      <p class="big rv">Contatti<em>.</em></p>
+      <p class="rv">Per opportunità professionali e collaborazioni:</p>
+      <p class="rv ctas"><a class="cta" href="https://www.linkedin.com/in/michele-naddeo-4a32b33b2/"><span>LinkedIn →</span></a><a class="cta alt" href="https://github.com/michelenaddeo"><span>GitHub →</span></a></p>
+      <p class="small">linkedin.com/in/michele-naddeo-4a32b33b2 · github.com/michelenaddeo</p>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">Michele Naddeo · 2026 · <a href="https://www.linkedin.com/in/michele-naddeo-4a32b33b2/">LinkedIn</a> · <a href="https://github.com/michelenaddeo">GitHub</a></div></footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  if (!reduce && 'IntersectionObserver' in window) root.classList.add('js');
+
+  /* comparsa allo scorrimento */
+  var rvs = document.querySelectorAll('.rv');
+  if (root.classList.contains('js')) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.08});
+    rvs.forEach(function(el){ io.observe(el); });
+    /* rete di sicurezza: dopo qualche secondo tutto è comunque visibile se l'osservatore non scatta */
+    setTimeout(function(){ if (!document.querySelector('.rv.in')) rvs.forEach(function(el){ el.classList.add('in'); }); }, 2500);
+  } else {
+    rvs.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* barra di avanzamento, voce attiva nel menu, linee del tempo */
+  var bar = document.getElementById('progress');
+  var links = [].slice.call(document.querySelectorAll('.nav nav a'));
+  var secs = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var tls = [].slice.call(document.querySelectorAll('.tl'));
+  var ticking = false;
+  function onScroll(){
+    ticking = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var y = window.scrollY || window.pageYOffset;
+    bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, y / h) : 0) + ')';
+    var cur = -1, mid = window.innerHeight * 0.4;
+    secs.forEach(function(s, i){ if (s && s.getBoundingClientRect().top <= mid) cur = i; });
+    links.forEach(function(a, i){ a.classList.toggle('on', i === cur); });
+    if (!reduce) tls.forEach(function(t){
+      var r = t.getBoundingClientRect();
+      var p = (window.innerHeight * 0.75 - r.top) / r.height;
+      t.style.setProperty('--p', Math.max(0, Math.min(1, p)).toFixed(3));
+    });
+  }
+  window.addEventListener('scroll', function(){ if (!ticking){ ticking = true; requestAnimationFrame(onScroll); } }, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+
+  /* lingua: italiano di base, inglese con il tasto in alto */
+  var lang = 'it';
+  var EN = {"chi sono": "about", "esperienza": "experience", "certificazioni": "certifications", "competenze": "skills", "progetti": "projects", "contatti": "contact", "Ingegnere informatico specializzato in infrastrutture IT e network security. Progettazione e gestione di soluzioni di firewalling, data protection e virtualizzazione in contesti enterprise. Laurea Magistrale in Cybersecurity in corso presso Sapienza Università di Roma.": "Computer engineer specialising in IT infrastructure and network security. Design and management of firewalling, data protection and virtualization solutions in enterprise environments. Currently pursuing an MSc in Cybersecurity at Sapienza University of Rome.", "01Chi sono": "<b>01<\/b>About", "02Esperienza": "<b>02<\/b>Experience", "03Certificazioni": "<b>03<\/b>Certifications", "04Competenze": "<b>04<\/b>Skills", "05Progetti": "<b>05<\/b>Projects", "Dallo sviluppo ai sistemi, fino alla sicurezza": "From development to systems, and on to security", "Esperienza": "Experience", "Formazione": "Education", "Nove certificazioni tra Sophos e Veeam": "Nine certifications across Sophos and Veeam", "Competenze": "Skills", "Progetti e lavori": "Projects and work", "Ingegnere informatico, laureato presso l'Università degli Studi di Salerno e attualmente iscritto alla Laurea Magistrale in Cybersecurity presso Sapienza Università di Roma.": "Computer engineer, graduated from the University of Salerno and currently enrolled in the <span class=\"hl\">MSc in Cybersecurity at Sapienza University of Rome<\/span>.", "Come Junior System Engineer in una società di consulenza IT ho operato su progetti di network security, firewalling e VPN, data protection e disaster recovery, e su infrastrutture virtualizzate, incluse migrazioni tra hypervisor.": "As a Junior System Engineer at an IT consulting firm, I worked on <span class=\"hl\">network security, firewalling and VPN<\/span> projects, data protection and disaster recovery, and virtualized infrastructures, including hypervisor migrations.", "In precedenza ho maturato esperienza nello sviluppo software, progettando e realizzando un'applicazione web enterprise su architettura MVC, oggetto della mia tesi di laurea.": "Before that, I gained experience in software development, designing and building an enterprise web application on an MVC architecture, which became the subject of my bachelor's thesis.", "Il mio ambito di specializzazione è la sicurezza delle infrastrutture.": "My area of specialisation is <span class=\"hl\">infrastructure security<\/span>.", "Laurea Magistrale in Cybersecurity": "MSc in Cybersecurity", "Laurea triennale in Ingegneria Informatica": "BSc in Computer Engineering", "Virtualizzazione e cloud": "Virtualization and cloud", "Sviluppo": "Development", "Gestione ordini enterprise": "Enterprise order management", "In aggiornamento": "Coming soon", "Statistica applicata alla sicurezza": "Statistics applied to security", "Garofalo & Partners S.r.l. · Stage · Salerno": "Garofalo &amp; Partners S.r.l. · Internship · Salerno, Italy", "Rinaldi Group S.p.A. SB · Stage · Giffoni Valle Piana": "Rinaldi Group S.p.A. SB · Internship · Giffoni Valle Piana, Italy", "Sapienza Università di Roma": "Sapienza University of Rome", "Università degli Studi di Salerno": "University of Salerno", "apr 2026 → ott 2026": "Apr 2026 → Oct 2026", "nov 2025 → gen 2026": "Nov 2025 → Jan 2026", "set 2026 → in corso": "Sep 2026 → present", "set 2022 → feb 2026": "Sep 2022 → Feb 2026", "Progettazione, configurazione e gestione di firewall Sophos: regole di accesso, policy di sicurezza e VPN": "Design, configuration and management of Sophos firewalls: access rules, security policies and VPNs", "Definizione e gestione di strategie di backup e disaster recovery con Veeam Backup & Replication e storage QNAP": "Definition and management of backup and disaster recovery strategies with Veeam Backup &amp; Replication and QNAP storage", "Amministrazione di ambienti VMware vSphere e migrazioni verso Microsoft Hyper-V per l'ottimizzazione dei costi di licenza": "Administration of VMware vSphere environments and migrations to Microsoft Hyper-V to optimise licensing costs", "Attività di cloud management su HPE Morpheus": "Cloud management on HPE Morpheus", "Analisi dei requisiti dei clienti e supporto tecnico sulle infrastrutture gestite": "Client requirements analysis and technical support on managed infrastructures", "Progettazione e sviluppo di un'applicazione web enterprise per la gestione degli ordini, dall'analisi dei requisiti alla documentazione tecnica": "Design and development of an enterprise web application for order management, from requirements analysis to technical documentation", "Architettura MVC con backend in C# (.NET) e frontend in TypeScript": "MVC architecture with a C# (.NET) backend and a TypeScript frontend", "Implementazione di ruoli, permessi e controlli di accesso ai dati, con separazione tra logica applicativa e livelli di autorizzazione": "Implementation of roles, permissions and data access controls, separating application logic from authorisation layers", "Integrazione con SQL Server e progettazione di viste per l'ottimizzazione delle query": "SQL Server integration and design of views for query optimisation", "Tesi: progettazione e sviluppo di un'applicazione web enterprise per la gestione degli ordini, realizzata durante il tirocinio presso Rinaldi Group.": "Thesis: design and development of an enterprise web application for order management, built during the internship at Rinaldi Group.", "mag 2026": "May 2026", "giu 2026": "Jun 2026", "Policy di sicurezza": "Security policies", "Reti cablate e wireless": "Wired and wireless networks", "Migrazioni tra hypervisor": "Hypervisor migrations", "Probabilità": "Probability", "Crittografia": "Cryptography", "Applicazione web enterprise per la gestione degli ordini aziendali, realizzata presso Rinaldi Group e oggetto della tesi di laurea. Gestione di ruoli e permessi e controllo degli accessi ai dati.": "Enterprise web application for company order management, built at Rinaldi Group and the subject of my bachelor's thesis. Role and permission management and data access control.", "Raccolta di elaborati interattivi di probabilità e statistica su temi di sicurezza: crittografia su curve ellittiche con analisi statistica delle chiavi, legge dei grandi numeri e teorema del limite centrale applicati a punteggi di attacco aggregati. Pagine HTML autonome con simulazioni e grafici SVG, senza librerie esterne.": "A collection of interactive probability and statistics assignments on security topics: elliptic-curve cryptography with statistical analysis of keys, and the law of large numbers and central limit theorem applied to aggregate attack scores. Self-contained HTML pages with simulations and SVG charts, no external libraries.", "Sezione in aggiornamento con progetti e laboratori del percorso magistrale in Cybersecurity.": "This section will be updated with projects and labs from the MSc in Cybersecurity.", "Vedi su GitHub →": "View on GitHub →", "PROGETTO 01": "PROJECT 01", "PROGETTO 02": "PROJECT 02", "PROGETTO 03": "PROJECT 03", "mesi in azienda": "months in industry", "Contatti.": "Contact<em>.<\/em>", "Per opportunità professionali e collaborazioni:": "For professional opportunities and collaborations:", "SCORRI": "SCROLL"};
+  var LN = {it:['Sophos Certified Architect','Veeam Certified Engineer','MSc Cybersecurity @ Sapienza','Firewall · VPN · Backup · Virtualizzazione'],
+            en:['Sophos Certified Architect','Veeam Certified Engineer','MSc Cybersecurity @ Sapienza','Firewall · VPN · Backup · Virtualization']};
+  var TSEL = '.nav nav a,.lead,.sec-label,h2,h3,.where,.when,.job li,.job .muted,.cert .date,.chips li,.project p,.project .n,.plink,.stats span,.big,#contatti p.rv:not(.ctas),.sc-t,#chi-sono p';
+  var langBtn = document.getElementById('lang');
+  function norm(t){ return t.replace(/\s+/g,' ').trim(); }
+  function setLang(l){
+    lang = l;
+    document.querySelectorAll(TSEL).forEach(function(el){
+      if (l === 'en'){
+        if (el._it == null){
+          var k = norm(el.textContent);
+          if (Object.prototype.hasOwnProperty.call(EN, k)){ el._it = el.innerHTML; el.innerHTML = EN[k]; }
+        }
+      } else if (el._it != null){ el.innerHTML = el._it; el._it = null; }
+    });
+    root.lang = l;
+    langBtn.textContent = l === 'en' ? 'IT' : 'EN';
+    langBtn.setAttribute('aria-label', l === 'en' ? 'Passa all\'italiano' : 'Switch to English');
+    try { localStorage.setItem('mn-lang', l); } catch (e) {}
+  }
+  langBtn.addEventListener('click', function(){ setLang(lang === 'en' ? 'it' : 'en'); });
+  try { if (localStorage.getItem('mn-lang') === 'en') setLang('en'); } catch (e) {}
+
+  if (reduce) return;
+
+  /* nome che si decifra */
+  var glyphs = '01<>/\\#$%&*+=_[]{}ABCDEFXZ';
+  document.querySelectorAll('.scr').forEach(function(el, idx){
+    var txt = el.getAttribute('data-text'), frame = 0, total = 26 + idx * 10;
+    (function step(){
+      var out = '';
+      for (var i = 0; i < txt.length; i++){
+        var lock = (frame / total) * txt.length;
+        out += i < lock ? txt[i] : glyphs[Math.floor(Math.random() * glyphs.length)];
+      }
+      el.textContent = out;
+      if (frame++ < total) setTimeout(step, 40); else el.textContent = txt;
+    })();
+  });
+
+  /* riga che si scrive da sola */
+  function lines(){ return LN[lang]; }
+  var tEl = document.getElementById('typed'), li = 0, ci = lines()[0].length, del = true;
+  function type(){
+    var s = lines()[li];
+    if (del){ ci--; if (ci <= 0){ del = false; li = (li + 1) % lines().length; } }
+    else { ci++; if (ci >= lines()[li].length){ del = true; tEl.textContent = lines()[li]; return setTimeout(type, 1900); } }
+    tEl.textContent = (del ? s : lines()[li]).slice(0, Math.max(0, ci));
+    setTimeout(type, del ? 28 : 55);
+  }
+  setTimeout(type, 2200);
+
+  /* contatori */
+  document.querySelectorAll('.count').forEach(function(el){
+    var to = +el.getAttribute('data-to'), t0 = null, dur = 1400;
+    el.textContent = '0';
+    function tick(t){
+      if (!t0) t0 = t;
+      var k = Math.min(1, (t - t0) / dur);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(tick); else el.textContent = to;
+    }
+    if ('IntersectionObserver' in window){
+      var co = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ co.disconnect(); requestAnimationFrame(tick); } }, {threshold:0.4});
+      co.observe(el);
+    } else requestAnimationFrame(tick);
+  });
+
+  /* schede: luce e inclinazione che seguono il puntatore */
+  document.querySelectorAll('.glow').forEach(function(c){
+    c.addEventListener('pointermove', function(e){
+      var r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      c.style.setProperty('--mx', x + 'px'); c.style.setProperty('--my', y + 'px');
+      if (e.pointerType === 'mouse')
+        c.style.transform = 'perspective(800px) rotateX(' + ((y / r.height - .5) * -5).toFixed(2) + 'deg) rotateY(' + ((x / r.width - .5) * 6).toFixed(2) + 'deg)';
+    });
+    c.addEventListener('pointerleave', function(){ c.style.transform = ''; });
+  });
+
+  /* rete viva nell'apertura: nodi, collegamenti e pacchetti in viaggio */
+  var hero = document.getElementById('hero'), cv = document.getElementById('net');
+  var ctx = cv.getContext && cv.getContext('2d');
+  if (!ctx) return;
+  var W = 0, H = 0, dpr = Math.min(2, window.devicePixelRatio || 1), nodes = [], packets = [], mouse = {x:-999, y:-999}, running = true, LINK = 150;
+  function size(){
+    var r = hero.getBoundingClientRect();
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.max(28, Math.min(90, Math.round(W * H / 14000)));
+    nodes = [];
+    for (var i = 0; i < n; i++) nodes.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35, r:Math.random() < .15 ? 3 : 1.6});
+    packets = [];
+  }
+  function frame(){
+    if (!running) return;
+    ctx.clearRect(0, 0, W, H);
+    var i, j, a, b, dx, dy, d;
+    for (i = 0; i < nodes.length; i++){
+      a = nodes[i]; a.x += a.vx; a.y += a.vy;
+      if (a.x < 0 || a.x > W) a.vx *= -1;
+      if (a.y < 0 || a.y > H) a.vy *= -1;
+    }
+    ctx.lineWidth = 1;
+    for (i = 0; i < nodes.length; i++){
+      a = nodes[i];
+      for (j = i + 1; j < nodes.length; j++){
+        b = nodes[j]; dx = a.x - b.x; dy = a.y - b.y; d = Math.sqrt(dx*dx + dy*dy);
+        if (d < LINK){
+          ctx.strokeStyle = 'rgba(154,163,175,' + (0.22 * (1 - d / LINK)).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          if (packets.length < 26 && Math.random() < 0.0009) packets.push({a:a, b:b, t:0, s:0.008 + Math.random()*0.012});
+        }
+      }
+      dx = a.x - mouse.x; dy = a.y - mouse.y; d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 200){
+        ctx.strokeStyle = 'rgba(224,58,70,' + (0.6 * (1 - d / 200)).toFixed(3) + ')';
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+      }
+    }
+    for (i = 0; i < nodes.length; i++){
+      a = nodes[i];
+      ctx.fillStyle = a.r > 2 ? 'rgba(224,58,70,.9)' : 'rgba(232,234,237,.55)';
+      ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.2832); ctx.fill();
+    }
+    for (i = packets.length - 1; i >= 0; i--){
+      var p = packets[i]; p.t += p.s;
+      if (p.t >= 1){ packets.splice(i, 1); continue; }
+      var px = p.a.x + (p.b.x - p.a.x) * p.t, py = p.a.y + (p.b.y - p.a.y) * p.t;
+      ctx.fillStyle = 'rgba(224,58,70,.25)'; ctx.beginPath(); ctx.arc(px, py, 6, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = '#E03A46'; ctx.beginPath(); ctx.arc(px, py, 2.4, 0, 6.2832); ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  hero.addEventListener('pointermove', function(e){ var r = hero.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+  hero.addEventListener('pointerleave', function(){ mouse.x = mouse.y = -999; });
+  var rt; window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(size, 150); });
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){
+      var vis = es[0].isIntersecting;
+      if (vis && !running){ running = true; requestAnimationFrame(frame); } else if (!vis) running = false;
+    }).observe(hero);
+  }
+  size(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
